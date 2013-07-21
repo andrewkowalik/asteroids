@@ -85,6 +85,7 @@ var Asteroids = (function() {
 
 	Game.prototype.update = function() {
 		var that = this
+
 		that.asteroids.forEach( function(asteroid) {
 			asteroid.updatePos.call(asteroid);
 			if (asteroid.offScreen.call(asteroid)) {
@@ -137,18 +138,27 @@ var Asteroids = (function() {
 	Asteroid.prototype = new MovingObjectSurrogate();
 
 	Asteroid.prototype.draw = function(ctx) {
-		ctx.fillStyle = "white"
-		ctx.beginPath();
+		// ctx.fillStyle = "black"
+		// ctx.beginPath();
 
-		ctx.arc(
-			this.pos['x'],
-			this.pos['y'],
-			this.rad,
-			0,
-			2 * Math.PI,
-			false
-		);
-		ctx.fill();
+		// // ctx.arc(
+		// // 	this.pos['x'],
+		// // 	this.pos['y'],
+		// // 	this.rad,
+		// // 	0,
+		// // 	2 * Math.PI,
+		// // 	false
+		// // );
+		// ctx.fill();
+
+		$("canvas").drawPolygon({
+		  fillStyle: "#589",
+		  strokeStyle: "#000",
+		  x: this.pos['x'], y: this.pos['y'],
+		  radius: this.rad,
+		  sides: 5,
+		  rotate: 25
+		});
 	}
 
 	Asteroid.randomAsteroid = function() {
