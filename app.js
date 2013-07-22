@@ -59,7 +59,8 @@ var Asteroids = (function() {
 		this.populate.call(this, numAsteroids);
 		this.ship = new Ship();
 		this.bullets = [];
-		this.draw = this.draw.bind(this)
+		this.draw = this.draw.bind(this);
+		this.bulletTimer = 0;
 	}
 
 	Game.prototype.start = function() {
@@ -71,7 +72,9 @@ var Asteroids = (function() {
 			if(key.isPressed("left")) { that.ship.rotate.call(that.ship, -0.2) };
 			if(key.isPressed("right")) { that.ship.rotate.call(that.ship, 0.2) };
 			if(key.isPressed("space")) { that.ship.fireBullet.call(that.ship, that) };
-
+			if (that.bulletTimer !== 0) {
+				that.bulletTimer -= 1;
+			}
 			that.update();
 			that.draw();
 		}, 31);
@@ -115,6 +118,8 @@ var Asteroids = (function() {
 	Game.prototype.draw = function() {
 		var that = this
 		that.ctx.clearRect(0, 0, maxPos['x'], maxPos['y']);
+		that.ctx.fillStyle="black";
+		that.ctx.fillRect(0, 0, maxPos['x'], maxPos['y']);;
 
 		that.ship.draw(that.ctx);
 		that.asteroids.forEach( function(asteroid) {
@@ -138,25 +143,12 @@ var Asteroids = (function() {
 	Asteroid.prototype = new MovingObjectSurrogate();
 
 	Asteroid.prototype.draw = function(ctx) {
-		// ctx.fillStyle = "black"
-		// ctx.beginPath();
-
-		// // ctx.arc(
-		// // 	this.pos['x'],
-		// // 	this.pos['y'],
-		// // 	this.rad,
-		// // 	0,
-		// // 	2 * Math.PI,
-		// // 	false
-		// // );
-		// ctx.fill();
-
 		$("canvas").drawPolygon({
 		  fillStyle: "#589",
 		  strokeStyle: "#000",
 		  x: this.pos['x'], y: this.pos['y'],
 		  radius: this.rad,
-		  sides: 5,
+		  sides: 8,
 		  rotate: 25
 		});
 	}
@@ -195,25 +187,12 @@ var Asteroids = (function() {
 	Ship.prototype = new MovingObjectSurrogate()
 
 	Ship.prototype.draw = function(ctx) {
-		ctx.fillStyle = "red"
-		ctx.beginPath();
-		ctx.lineWidth   = 4;
-
-		ctx.arc(
-			this.pos['x'],
-			this.pos['y'],
-			this.rad,
-			0,
-			2 * Math.PI,
-			false
-		);
-		ctx.moveTo(this.pos['x'], this.pos['y']);
-		var x = this.pos['x'] + this.rad * Math.cos(this.rot)
-		var y = this.pos['y'] + this.rad * Math.sin(this.rot)
-		ctx.lineTo(x, y);
-
-		ctx.fill();
-		ctx.stroke();
+		$("canvas").drawImage({
+		  source: "ship.png",
+		  x: this.pos['x'], y: this.pos['y'],
+		  scale: 0.35,
+		  rotate: (57.2957795 * (this.rot + 1.5707963267948966))
+		});
 	}
 
 	Ship.prototype.rotate = function(d0) {
@@ -231,7 +210,10 @@ var Asteroids = (function() {
 	}
 
 	Ship.prototype.fireBullet = function(game) {
-		game.bullets.push(new Bullet(this.pos, this.vel, this.rot));
+		if (game.bulletTimer === 0) {
+			game.bullets.push(new Bullet(this.pos, this.vel, this.rot));
+			game.bulletTimer = 5;
+		}
 	}
 
 	function MovingObjectSurrogate() {
@@ -250,7 +232,7 @@ var Asteroids = (function() {
 			dy: baseVel['dy'] + 5 * Math.sin(rot)
 		};
 
-		MovingObject.call(this, pos, vel, 1);
+		MovingObject.call(this, pos, vel, 2);
 	}
 
 	Bullet.prototype = new MovingObjectSurrogate()
@@ -278,5 +260,4 @@ var Asteroids = (function() {
 })();
 
 canvas = document.getElementById('game');
-console.log(canvas)
 new Asteroids.Game(canvas.getContext("2d"), 20 ).start();
