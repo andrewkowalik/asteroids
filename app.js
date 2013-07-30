@@ -82,7 +82,7 @@
 	Game.prototype.start = function() {
 		var that = this;
 
-		window.setInterval(function() {
+		this.timer = window.setInterval(function() {
 			if(key.isPressed("up")) { that.ship.power.call(that.ship, 0.4) };
 			if(key.isPressed("down")) { that.ship.power.call(that.ship, -0.4) };
 			if(key.isPressed("left")) { that.ship.rotate.call(that.ship, -0.2) };
@@ -127,7 +127,8 @@
 			return true
 		});
 		if (that.ship.isHit.call(that.ship, that.asteroids, that)) {
-			console.log("Hit!");
+			clearInterval(this.timer);
+			alert("You Lose")
 		}
 
 	}
