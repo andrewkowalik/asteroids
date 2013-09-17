@@ -239,9 +239,9 @@
 
 	Ship.prototype.rotate = function(d0) {
 		this.rot += d0
-		if (this.rot > Math.PI) {
+		if (this.rot > (Math.PI * 2)) {
 			this.rot -= (Math.PI * 2)
-		} else if (this.rot < -Math.PI){
+		} else if (this.rot < (0)){
 			this.rot += (Math.PI * 2)
 		}
 	}
