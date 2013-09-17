@@ -300,27 +300,20 @@
 	};
 })();
 
-function loadSprite(src) {
-  var deferred = $.Deferred();
-  var sprite = new Image();
-  sprite.onload = function() {
-      deferred.resolve();
-  };
-  sprite.src = src;
-  return deferred.promise();
-}
+var loader = new PxLoader(),
+    backgroundImg = loader.addImage('planet.png'),
+    treesImg = loader.addImage('ship.png')
 
-height = $(window).height() * .95
-width = $(window).width() * .95
-$('canvas').attr('height', height)
-$('canvas').attr('width', width)
-canvas = document.getElementById('game');
+loader.addCompletionListener(function() {
+	height = $(window).height() * .95
+	width = $(window).width() * .95
+	$('canvas').attr('height', height)
+	$('canvas').attr('width', width)
+	canvas = document.getElementById('game');
 
-var loaders = [];
-loaders.push(loadSprite('planet.png'));
-loaders.push(loadSprite('ship.png'));
-$.when.apply(null, loaders).done(function() {
   new Asteroids.Game(canvas.getContext("2d"), 20 ).start();
 });
+
+loader.start();
 
 
