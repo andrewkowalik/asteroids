@@ -300,9 +300,27 @@
 	};
 })();
 
+function loadSprite(src) {
+  var deferred = $.Deferred();
+  var sprite = new Image();
+  sprite.onload = function() {
+      deferred.resolve();
+  };
+  sprite.src = src;
+  return deferred.promise();
+}
+
 height = $(window).height() * .95
 width = $(window).width() * .95
 $('canvas').attr('height', height)
 $('canvas').attr('width', width)
 canvas = document.getElementById('game');
-new Asteroids.Game(canvas.getContext("2d"), 20 ).start();
+
+var loaders = [];
+loaders.push(loadSprite('planet.png'));
+loaders.push(loadSprite('ship.png'));
+$.when.apply(null, loaders).done(function() {
+  new Asteroids.Game(canvas.getContext("2d"), 20 ).start();
+});
+
+
