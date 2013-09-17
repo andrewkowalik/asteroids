@@ -171,7 +171,7 @@
 
 	Asteroid.prototype.draw = function(ctx) {
 		$("canvas").drawImage({
-		  source: "planet.png",
+		  source: backgroundImg,
 		  x: this.pos['x'], y: this.pos['y'],
 		  scale: this.rad/190,
 		});
@@ -230,7 +230,7 @@
 
 	Ship.prototype.draw = function(ctx) {
 		$("canvas").drawImage({
-		  source: "ship.png",
+		  source: treesImg,
 		  x: this.pos['x'], y: this.pos['y'],
 		  scale: 0.35,
 		  rotate: (57.2957795 * (this.rot + 1.5707963267948966))
